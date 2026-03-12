@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LAZULI — Design System & Screen Flows</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=Outfit:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f0e0d;
+  --chalk: #f8f5f1;
+  --stone: #ede8e2;
+  --sand: #c8b89a;
+  --rust: #a8411c;
+  --mist: #8c8680;
+  --gold: #b8935a;
+  --warm: #f2ece4;
+  --bg: #1a1814;
+  --grid: #2a2622;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--chalk);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ===== CANVAS TOOLBAR ===== */
+.toolbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: #111;
+  border-bottom: 1px solid #2a2622;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 24px;
+}
+.toolbar-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: #fff;
+}
+.toolbar-sep { width: 1px; height: 24px; background: #2a2622; }
+.toolbar-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .2em;
+  color: rgba(255,255,255,.35);
+  text-transform: uppercase;
+}
+.toolbar-badge {
+  background: var(--rust);
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .1em;
+  padding: 3px 10px;
+  margin-left: auto;
+}
+.toolbar-nav {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.tn {
+  background: none;
+  border: 1px solid transparent;
+  color: rgba(255,255,255,.4);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .1em;
+  padding: 5px 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all .2s;
+  text-decoration: none;
+}
+.tn:hover, .tn.active { border-color: var(--sand); color: var(--sand); }
+
+/* ===== CANVAS ===== */
+.canvas {
+  margin-top: 52px;
+  padding: 60px 40px;
+  min-height: 100vh;
+}
+
+/* dot grid background */
+.canvas::before {
+  content: '';
+  position: fixed;
+  inset: 52px 0 0 0;
+  background-image: radial-gradient(circle, rgba(200,184,154,.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== SECTION HEADERS ===== */
+.section-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .4em;
+  color: var(--rust);
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(168,65,28,.2);
+}
+
+/* ===== DESIGN TOKENS SECTION ===== */
+.tokens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.token-card {
+  background: #1f1c19;
+  border: 1px solid #2a2622;
+  padding: 20px;
+}
+
+.token-swatch-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.swatch {
+  flex: 1;
+  height: 48px;
+  position: relative;
+}
+.swatch-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: .15em;
+  color: rgba(255,255,255,.3);
+  margin-top: 6px;
+}
+.token-heading {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .25em;
+  color: rgba(255,255,255,.4);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* typography tokens */
+.typo-sample {
+  background: #1f1c19;
+  border: 1px solid #2a2622;
+  padding: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+.typo-row {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid #2a2622;
+}
+.typo-row:last-child { border-bottom: none; }
+.typo-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: rgba(255,255,255,.25);
+  letter-spacing: .1em;
+  width: 120px;
+  flex-shrink: 0;
+}
+
+/* ===== SCREENS ===== */
+.screens-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.screen-row {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 80px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.screen-frame {
+  position: relative;
+  flex-shrink: 0;
+}
+.screen-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .25em;
+  color: rgba(255,255,255,.3);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.screen-label span {
+  background: #2a2622;
+  padding: 2px 8px;
+  font-size: 8px;
+}
+
+.screen-mock {
+  border: 1px solid #2a2622;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+}
+
+.screen-annotations {
+  flex: 1;
+  min-width: 280px;
+  padding-top: 28px;
+}
+.annotation {
+  margin-bottom: 24px;
+  padding-left: 20px;
+  border-left: 2px solid var(--rust);
+}
+.ann-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .2em;
+  color: var(--sand);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ann-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,.45);
+  line-height: 1.7;
+}
+
+/* ===== MOCK CONTENT (simulated screens) ===== */
+.m-nav {
+  background: var(--ink);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.m-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--chalk);
+}
+.m-nav-links {
+  display: flex;
+  gap: 16px;
+}
+.m-nav-link {
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+.m-nav-link.a { color: rgba(255,255,255,.9); }
+.m-nav-r {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.m-cart-btn {
+  background: var(--rust);
+  color: #fff;
+  font-size: 7px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+}
+
+/* Hero screen */
+.m-hero {
+  height: 280px;
+  background: linear-gradient(135deg, #1a1410 0%, #2d2218 50%, #1a1410 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.m-hero-img {
+  position: absolute;
+  inset: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280"><rect width="400" height="280" fill="%23241e18"/><rect x="200" y="0" width="200" height="280" fill="%232d2218"/></svg>');
+  background-size: cover;
+}
+.m-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(10,8,6,.85) 40%, rgba(10,8,6,.2) 100%);
+}
+.m-hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+}
+.m-hero-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: .3em;
+  color: var(--sand);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.m-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--chalk);
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.m-hero-title em { font-style: italic; color: var(--sand); }
+.m-cta {
+  background: var(--rust);
+  color: #fff;
+  font-size: 7px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  display: inline-block;
+  margin-right: 8px;
+}
+.m-cta-o {
+  border: 1px solid rgba(255,255,255,.4);
+  color: rgba(255,255,255,.7);
+  font-size: 7px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  display: inline-block;
+}
+
+/* ticker */
+.m-ticker {
+  background: var(--ink);
+  padding: 6px 0;
+  overflow: hidden;
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: .2em;
+  color: rgba(255,255,255,.3);
+  display: flex;
+  gap: 24px;
+  padding: 6px 16px;
+}
+.m-ticker-dot { color: var(--rust); }
+
+/* product grid section */
+.m-section { padding: 20px 24px; background: var(--chalk); }
+.m-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+.m-s-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: .25em;
+  color: var(--mist);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.m-s-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--ink);
+}
+.m-s-link {
+  font-size: 7px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 1px;
+}
+.m-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.m-product-card { background: var(--stone); }
+.m-product-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--stone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.m-product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.m-wish { position: absolute; top: 6px; right: 6px; font-size: 10px; color: var(--mist); }
+.m-product-info { padding: 8px; background: #fff; }
+.m-product-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.m-product-price { font-size: 8px; color: var(--mist); }
+.m-product-price strong { color: var(--ink); }
+
+/* categories */
+.m-cats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 24px 20px;
+  background: var(--chalk);
+}
+.m-cat {
+  aspect-ratio: 1;
+  background: var(--stone);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.m-cat img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.m-cat-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.7) 0%, transparent 60%);
+}
+.m-cat-label {
+  position: relative;
+  z-index: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  color: #fff;
+  padding: 8px;
+}
+
+/* shop page */
+.m-shop-header {
+  background: var(--ink);
+  padding: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.m-shop-ht {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  color: var(--chalk);
+  font-weight: 400;
+}
+.m-shop-hs {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  color: var(--mist);
+  letter-spacing: .2em;
+}
+.m-filters {
+  background: var(--chalk);
+  padding: 12px 24px;
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--stone);
+}
+.m-filter-chip {
+  border: 1px solid var(--stone);
+  padding: 4px 10px;
+  font-size: 7px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.m-filter-chip.active { border-color: var(--ink); color: var(--ink); }
+
+/* product detail */
+.m-pd {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--chalk);
+}
+.m-pd-gallery { background: var(--stone); aspect-ratio: 1; position: relative; overflow: hidden; }
+.m-pd-gallery img { width: 100%; height: 100%; object-fit: cover; }
+.m-pd-info { padding: 20px; }
+.m-pd-cat {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: .25em;
+  color: var(--mist);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.m-pd-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.m-pd-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.m-size-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.m-size {
+  border: 1px solid var(--stone);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  color: var(--mist);
+}
+.m-size.sel { border-color: var(--ink); color: var(--ink); }
+.m-pd-btn {
+  background: var(--rust);
+  color: #fff;
+  font-size: 7px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.m-pd-btn-o {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-size: 7px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  width: 100%;
+  text-align: center;
+}
+
+/* cart drawer */
+.m-drawer {
+  display: flex;
+  background: var(--chalk);
+}
+.m-drawer-main { flex: 1; position: relative; }
+.m-drawer-panel {
+  width: 140px;
+  background: var(--chalk);
+  border-left: 1px solid var(--stone);
+  display: flex;
+  flex-direction: column;
+}
+.m-drawer-head {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--stone);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.m-drawer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--ink);
+}
+.m-drawer-close { font-size: 14px; color: var(--mist); }
+.m-cart-item {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--stone);
+}
+.m-cart-img {
+  width: 36px;
+  height: 46px;
+  background: var(--stone);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.m-cart-img img { width: 100%; height: 100%; object-fit: cover; }
+.m-cart-info { flex: 1; }
+.m-cart-name { font-family: 'Cormorant Garamond', serif; font-size: 9px; color: var(--ink); margin-bottom: 2px; }
+.m-cart-meta { font-size: 7px; color: var(--mist); margin-bottom: 4px; }
+.m-cart-price { font-size: 8px; color: var(--ink); font-weight: 500; }
+.m-drawer-foot {
+  padding: 12px 16px;
+  border-top: 1px solid var(--stone);
+  margin-top: auto;
+}
+.m-drawer-total {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.m-drawer-total-l { font-size: 8px; color: var(--mist); }
+.m-drawer-total-v {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.m-checkout-btn {
+  background: var(--rust);
+  color: #fff;
+  font-size: 7px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* footer mock */
+.m-footer {
+  background: var(--ink);
+  padding: 20px 24px;
+}
+.m-foot-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: #fff;
+  letter-spacing: .15em;
+  margin-bottom: 6px;
+}
+.m-foot-text { font-size: 8px; color: rgba(255,255,255,.35); line-height: 1.6; margin-bottom: 14px; }
+.m-foot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+.m-foot-h { font-family: 'Space Mono', monospace; font-size: 7px; letter-spacing: .2em; color: rgba(255,255,255,.6); text-transform: uppercase; margin-bottom: 6px; }
+.m-foot-link { font-size: 8px; color: rgba(255,255,255,.3); display: block; margin-bottom: 4px; }
+.m-foot-bottom { border-top: 1px solid rgba(255,255,255,.07); padding-top: 10px; display: flex; justify-content: space-between; }
+.m-foot-copy { font-family: 'Space Mono', monospace; font-size: 7px; color: rgba(255,255,255,.2); letter-spacing: .1em; }
+.m-pay { font-family: 'Space Mono', monospace; font-size: 7px; color: rgba(255,255,255,.2); display: flex; gap: 8px; }
+
+/* checkout page */
+.m-checkout {
+  background: var(--chalk);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.m-chk-left { padding: 20px; border-right: 1px solid var(--stone); }
+.m-chk-right { padding: 20px; background: var(--warm); }
+.m-chk-step {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: .25em;
+  color: var(--mist);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.m-input-group { margin-bottom: 10px; }
+.m-input-label { font-size: 7px; color: var(--mist); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.m-input { 
+  width: 100%;
+  border: 1px solid var(--stone);
+  padding: 7px 10px;
+  font-size: 8px;
+  color: var(--ink);
+  background: #fff;
+}
+.m-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.m-order-item { display: flex; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--stone); }
+.m-oi-img { width: 40px; height: 50px; background: var(--stone); overflow: hidden; }
+.m-oi-img img { width: 100%; height: 100%; object-fit: cover; }
+.m-oi-name { font-family: 'Cormorant Garamond', serif; font-size: 9px; color: var(--ink); }
+.m-oi-meta { font-size: 7px; color: var(--mist); }
+.m-oi-price { font-size: 8px; color: var(--ink); margin-left: auto; }
+.m-order-total { padding: 12px 0; border-top: 1px solid var(--stone); margin-top: 8px; }
+.m-ot-row { display: flex; justify-content: space-between; font-size: 8px; color: var(--mist); margin-bottom: 4px; }
+.m-ot-row.final { color: var(--ink); font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 600; margin-top: 8px; }
+
+/* about page */
+.m-about { background: var(--chalk); }
+.m-about-hero { height: 120px; background: var(--stone); position: relative; overflow: hidden; display: flex; align-items: flex-end; }
+.m-about-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.m-about-hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.4); }
+.m-about-text { padding: 16px 24px; }
+.m-about-ht { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--ink); margin-bottom: 8px; }
+.m-about-p { font-size: 8px; color: var(--mist); line-height: 1.7; }
+
+/* contact page */
+.m-contact { background: var(--chalk); padding: 0 24px 20px; }
+
+/* lookbook */
+.m-lookbook { background: var(--ink); }
+.m-lb-hero { height: 160px; position: relative; overflow: hidden; }
+.m-lb-hero img { width: 100%; height: 100%; object-fit: cover; }
+.m-lb-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; padding: 16px; }
+.m-lb-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; }
+.m-lb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--ink); padding: 2px; }
+.m-lb-item { aspect-ratio: 3/4; overflow: hidden; position: relative; }
+.m-lb-item img { width: 100%; height: 100%; object-fit: cover; }
+.m-lb-item-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 60%); }
+
+/* wishlist */
+.m-wishlist { background: var(--chalk); padding: 20px 24px; }
+.m-wish-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* color indicator for annotation */
+.color-dot {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; flex-shrink: 0;
+}
+
+/* ===== COMPONENT SHEET ===== */
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 80px;
+}
+.comp-card {
+  background: #1f1c19;
+  border: 1px solid #2a2622;
+  padding: 20px;
+}
+.comp-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: .2em;
+  color: rgba(255,255,255,.25);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+/* simulated buttons */
+.b-primary { background: var(--rust); color: #fff; padding: 11px 22px; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; display: inline-block; }
+.b-secondary { border: 1.5px solid var(--ink); color: var(--ink); padding: 10px 20px; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; display: inline-block; background: var(--chalk); margin-top: 8px; }
+.b-ghost { border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); padding: 9px 18px; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; display: inline-block; background: none; margin-top: 8px; }
+
+/* simulated card */
+.c-card { background: var(--chalk); overflow: hidden; }
+.c-card-img { width: 100%; aspect-ratio: 3/4; background: var(--stone); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.c-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.c-card-body { padding: 10px; }
+.c-card-name { font-family: 'Cormorant Garamond', serif; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+.c-card-price { font-size: 10px; color: var(--mist); }
+
+/* input sim */
+.inp { border: 1px solid var(--stone); background: #fff; padding: 9px 12px; font-size: 10px; color: var(--ink); width: 100%; display: block; margin-bottom: 8px; }
+.inp::placeholder { color: var(--mist); }
+
+/* badge sim */
+.badge-r { background: var(--rust); color: #fff; font-size: 8px; letter-spacing: .1em; padding: 3px 10px; display: inline-block; margin-right: 6px; }
+.badge-s { background: var(--stone); color: var(--mist); font-size: 8px; letter-spacing: .1em; padding: 3px 10px; display: inline-block; margin-right: 6px; }
+.badge-g { background: #2a6e3f; color: #fff; font-size: 8px; letter-spacing: .1em; padding: 3px 10px; display: inline-block; }
+
+/* nav sim */
+.nav-sim {
+  background: var(--ink);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== SPACING GUIDE ===== */
+.spacing-guide {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+}
+.sp-block {
+  background: rgba(168,65,28,.15);
+  border: 1px solid rgba(168,65,28,.3);
+  display: flex;
+  align-items: flex-end;
+  padding: 4px;
+}
+.sp-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: var(--rust);
+  letter-spacing: .1em;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  margin-bottom: 4px;
+}
+
+/* flow arrows */
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.flow-node {
+  background: #1f1c19;
+  border: 1px solid #2a2622;
+  padding: 8px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .15em;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+}
+.flow-node.active {
+  border-color: var(--rust);
+  color: var(--rust);
+}
+.flow-arrow {
+  color: rgba(255,255,255,.2);
+  font-size: 14px;
+}
+
+/* responsive screens helper */
+.screen-desktop { width: 640px; }
+.screen-mobile { width: 240px; }
+.screen-tablet { width: 420px; }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-brand">LAZULI</div>
+  <div class="toolbar-sep"></div>
+  <div class="toolbar-label">Design System — v1.0</div>
+  <div class="toolbar-sep"></div>
+  <div class="toolbar-label">Algeria Fashion E-Commerce</div>
+  <div class="toolbar-nav">
+    <a href="#tokens" class="tn">Tokens</a>
+    <a href="#components" class="tn">Components</a>
+    <a href="#screens" class="tn active">Screens</a>
+    <a href="#flow" class="tn">User Flow</a>
+  </div>
+  <div class="toolbar-badge">EST. 2024</div>
+</div>
+
+<div class="canvas">
+
+  <!-- ============ DESIGN TOKENS ============ -->
+  <div id="tokens" style="margin-bottom:80px; position:relative; z-index:1;">
+    <div class="section-title">01 — Design Tokens</div>
+
+    <!-- Color palette -->
+    <div style="margin-bottom:24px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.25em; color:rgba(255,255,255,.3); text-transform:uppercase;">Color Palette</div>
+    <div class="tokens-grid">
+      <!-- Primary Colors -->
+      <div class="token-card">
+        <div class="token-heading">Primary</div>
+        <div class="token-swatch-row">
+          <div>
+            <div class="swatch" style="background:#0f0e0d; border:1px solid #2a2622;"></div>
+            <div class="swatch-label">--ink<br>#0f0e0d</div>
+          </div>
+          <div>
+            <div class="swatch" style="background:#f8f5f1;"></div>
+            <div class="swatch-label">--chalk<br>#f8f5f1</div>
+          </div>
+          <div>
+            <div class="swatch" style="background:#a8411c;"></div>
+            <div class="swatch-label">--rust<br>#a8411c</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary Colors -->
+      <div class="token-card">
+        <div class="token-heading">Secondary</div>
+        <div class="token-swatch-row">
+          <div>
+            <div class="swatch" style="background:#ede8e2;"></div>
+            <div class="swatch-label">--stone<br>#ede8e2</div>
+          </div>
+          <div>
+            <div class="swatch" style="background:#c8b89a;"></div>
+            <div class="swatch-label">--sand<br>#c8b89a</div>
+          </div>
+          <div>
+            <div class="swatch" style="background:#f2ece4;"></div>
+            <div class="swatch-label">--warm<br>#f2ece4</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accent Colors -->
+      <div class="token-card">
+        <div class="token-heading">Accents</div>
+        <div class="token-swatch-row">
+          <div>
+            <div class="swatch" style="background:#b8935a;"></div>
+            <div class="swatch-label">--gold<br>#b8935a</div>
+          </div>
+          <div>
+            <div class="swatch" style="background:#8c8680;"></div>
+            <div class="swatch-label">--mist<br>#8c8680</div>
+          </div>
+          <div>
+            <div class="swatch" style="background:#8a3216;"></div>
+            <div class="swatch-label">--rust-dark<br>#8a3216</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typography token card -->
+      <div class="token-card">
+        <div class="token-heading">Type Scale</div>
+        <div style="margin-bottom:8px;">
+          <div style="font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--chalk); font-weight:400;">Display</div>
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.3); letter-spacing:.15em;">Cormorant Garamond</div>
+        </div>
+        <div style="margin-bottom:8px;">
+          <div style="font-family:'Outfit',sans-serif; font-size:13px; color:var(--chalk); font-weight:400;">Body & UI</div>
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.3); letter-spacing:.15em;">Outfit</div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--sand); letter-spacing:.2em;">MONO / LABELS</div>
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.3); letter-spacing:.15em;">Space Mono</div>
+        </div>
+      </div>
+
+      <!-- Spacing -->
+      <div class="token-card">
+        <div class="token-heading">Spacing Scale</div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="height:4px; width:4px; background:var(--rust);"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.35);">4px — xs</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="height:4px; width:8px; background:var(--rust);"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.35);">8px — sm</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="height:4px; width:16px; background:var(--rust);"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.35);">16px — md</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="height:4px; width:24px; background:var(--rust);"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.35);">24px — lg</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="height:4px; width:36px; background:var(--rust);"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.35);">36px — xl</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="height:4px; width:52px; background:var(--rust);"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.35);">52px — 2xl</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Border radius -->
+      <div class="token-card">
+        <div class="token-heading">Borders & Radius</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div>
+            <div style="height:28px; width:80px; background:var(--stone); border-radius:0; margin-bottom:4px;"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.3);">0px — Sharp (Primary)</div>
+          </div>
+          <div>
+            <div style="height:28px; width:80px; background:var(--stone); border-radius:50%; margin-bottom:4px;"></div>
+            <div style="font-family:'Space Mono',monospace; font-size:7px; color:rgba(255,255,255,.3);">50% — Circle (Badges)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography Scale -->
+    <div style="margin-bottom:24px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.25em; color:rgba(255,255,255,.3); text-transform:uppercase;">Type Scale</div>
+    <div class="typo-sample">
+      <div class="typo-row">
+        <div class="typo-meta">Display XL<br>Cormorant / 54px / 400</div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:400; color:var(--chalk);">Dressed for Algeria</div>
+      </div>
+      <div class="typo-row">
+        <div class="typo-meta">Display L<br>Cormorant / 36px / 400</div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:400; color:var(--chalk);">New Arrivals</div>
+      </div>
+      <div class="typo-row">
+        <div class="typo-meta">Heading<br>Cormorant / 24px / 600</div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--chalk);">Satin Midi Dress</div>
+      </div>
+      <div class="typo-row">
+        <div class="typo-meta">Body<br>Outfit / 14px / 400</div>
+        <div style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:400; color:rgba(255,255,255,.6);">Premium clothing for every Algerian. Quality fashion for men, women &amp; kids — delivered nationwide.</div>
+      </div>
+      <div class="typo-row">
+        <div class="typo-meta">Label<br>Space Mono / 10px / 400</div>
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.25em; color:var(--sand); text-transform:uppercase;">NEW ARRIVALS · SS 2025</div>
+      </div>
+      <div class="typo-row">
+        <div class="typo-meta">Caption<br>Outfit / 12px / 400</div>
+        <div style="font-family:'Outfit',sans-serif; font-size:12px; color:var(--mist); color:rgba(255,255,255,.35);">4,800 DZD · Size M</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ COMPONENTS ============ -->
+  <div id="components" style="margin-bottom:80px; position:relative; z-index:1;">
+    <div class="section-title">02 — Components</div>
+    <div class="component-grid">
+
+      <!-- Buttons -->
+      <div class="comp-card">
+        <div class="comp-label">Buttons</div>
+        <div class="b-primary">Add to Cart</div>
+        <div class="b-secondary" style="display:block; margin-top:8px;">View All</div>
+        <div class="b-ghost" style="display:block; margin-top:8px;">Shop Now</div>
+      </div>
+
+      <!-- Product Card -->
+      <div class="comp-card">
+        <div class="comp-label">Product Card</div>
+        <div class="c-card">
+          <div class="c-card-img">
+            <img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt="dress" onerror="this.parentElement.style.background='var(--stone)'">
+          </div>
+          <div class="c-card-body">
+            <div class="c-card-name">Satin Midi Dress</div>
+            <div class="c-card-price">4,800 DZD</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="comp-card">
+        <div class="comp-label">Navigation Bar</div>
+        <div class="nav-sim">
+          <div class="m-logo">LAZULI</div>
+          <div style="display:flex; gap:12px;">
+            <div style="font-size:7px; letter-spacing:.1em; color:rgba(255,255,255,.5); text-transform:uppercase;">Shop</div>
+            <div style="font-size:7px; letter-spacing:.1em; color:rgba(255,255,255,.5); text-transform:uppercase;">Lookbook</div>
+          </div>
+          <div class="m-cart-btn">Cart (2)</div>
+        </div>
+        <div style="height:8px; background:var(--ink); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <div style="font-family:'Space Mono',monospace; font-size:5px; letter-spacing:.2em; color:rgba(255,255,255,.25);">● FREE SHIPPING OVER 5,000 DZD ● MADE IN ALGERIA</div>
+        </div>
+      </div>
+
+      <!-- Badges & Tags -->
+      <div class="comp-card">
+        <div class="comp-label">Badges & Tags</div>
+        <div style="margin-bottom:10px;">
+          <div class="badge-r">New</div>
+          <div class="badge-r" style="background:var(--gold);">Sale</div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div class="badge-s">In Stock</div>
+          <div class="badge-s" style="background:#fff3f0; color:var(--rust);">Low Stock</div>
+        </div>
+        <div>
+          <div class="badge-g">Subscribed ✓</div>
+        </div>
+      </div>
+
+      <!-- Form Inputs -->
+      <div class="comp-card">
+        <div class="comp-label">Form Inputs</div>
+        <div style="background:var(--chalk); padding:12px;">
+          <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px;">Email</div>
+          <div class="inp" style="font-size:8px; padding:7px 10px; border:1px solid var(--stone); background:#fff; margin-bottom:0; color:var(--mist);">Your email address</div>
+          <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; margin-top:8px;">Quantity</div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:24px; height:24px; border:1px solid var(--stone); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--mist);">−</div>
+            <div style="font-family:'Space Mono',monospace; font-size:11px; min-width:20px; text-align:center; color:var(--ink);">1</div>
+            <div style="width:24px; height:24px; border:1px solid var(--stone); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--mist);">+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Size selector -->
+      <div class="comp-card">
+        <div class="comp-label">Size Selector</div>
+        <div style="background:var(--chalk); padding:12px;">
+          <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px;">Select Size</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <div style="border:1px solid var(--stone); width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:8px; color:var(--mist);">XS</div>
+            <div style="border:1px solid var(--stone); width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:8px; color:var(--mist);">S</div>
+            <div style="border:1px solid var(--ink); width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:8px; color:var(--ink); font-weight:600;">M</div>
+            <div style="border:1px solid var(--stone); width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:8px; color:var(--mist);">L</div>
+            <div style="border:1px solid var(--stone); width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:8px; color:var(--mist);">XL</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Star Rating -->
+      <div class="comp-card">
+        <div class="comp-label">Ratings & Reviews</div>
+        <div style="background:var(--chalk); padding:12px;">
+          <div style="font-size:14px; color:var(--gold); letter-spacing:2px; margin-bottom:4px;">★★★★★</div>
+          <div style="font-family:'Space Mono',monospace; font-size:8px; color:var(--mist); letter-spacing:.1em;">(48 Reviews)</div>
+          <div style="border-top:1px solid var(--stone); margin-top:8px; padding-top:8px;">
+            <div style="font-family:'Cormorant Garamond',serif; font-size:11px; color:var(--ink); font-style:italic;">"Absolute perfection. The quality is unmatched."</div>
+            <div style="font-size:7px; color:var(--mist); margin-top:4px;">— Fatima B., Algiers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="comp-card">
+        <div class="comp-label">Filter Chips</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <div style="border:1px solid var(--ink); color:var(--ink); background:var(--chalk); font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px;">Women's</div>
+          <div style="border:1px solid var(--stone); color:var(--mist); background:var(--chalk); font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px;">Men's</div>
+          <div style="border:1px solid var(--stone); color:var(--mist); background:var(--chalk); font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px;">Kids</div>
+          <div style="border:1px solid var(--stone); color:var(--mist); background:var(--chalk); font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px;">Accessories</div>
+          <div style="border:1px solid var(--stone); color:var(--mist); background:var(--chalk); font-size:7px; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px;">Sale</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ SCREENS ============ -->
+  <div id="screens" class="screens-wrapper">
+    <div class="section-title">03 — Screen Designs</div>
+
+    <!-- HOME PAGE -->
+    <div style="margin-bottom:60px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:28px;">Homepage — index.html</div>
+      <div class="screen-row">
+        <div class="screen-frame">
+          <div class="screen-label">
+            Homepage <span>Desktop · 1440px</span>
+          </div>
+          <div class="screen-mock screen-desktop">
+            <!-- NAV -->
+            <div class="m-nav">
+              <div class="m-logo">LAZULI</div>
+              <div class="m-nav-links">
+                <div class="m-nav-link a">Home</div>
+                <div class="m-nav-link">Shop</div>
+                <div class="m-nav-link">Lookbook</div>
+                <div class="m-nav-link">About</div>
+                <div class="m-nav-link">Contact</div>
+              </div>
+              <div class="m-nav-r">
+                <div style="font-size:13px; color:rgba(255,255,255,.5);">🔍</div>
+                <div style="font-size:13px; color:rgba(255,255,255,.5);">♡</div>
+                <div class="m-cart-btn">Cart (0)</div>
+              </div>
+            </div>
+            <!-- TICKER -->
+            <div class="m-ticker">
+              <span class="m-ticker-dot">●</span> FREE SHIPPING OVER 5,000 DZD
+              <span class="m-ticker-dot">●</span> MADE IN ALGERIA
+              <span class="m-ticker-dot">●</span> NEW COLLECTION SS25
+            </div>
+            <!-- HERO -->
+            <div class="m-hero">
+              <div class="m-hero-img"></div>
+              <div class="m-hero-overlay"></div>
+              <!-- hero images in two columns -->
+              <div style="position:absolute; right:0; top:0; width:50%; height:100%; display:grid; grid-template-rows:1fr 1fr;">
+                <img src="Gemini_Generated_Image_omcyhvomcyhvomcy.png" alt="" style="width:100%; height:100%; object-fit:cover; opacity:.7;">
+                <img src="Gemini_Generated_Image_agy78sagy78sagy7.png" alt="" style="width:100%; height:100%; object-fit:cover; opacity:.7;">
+              </div>
+              <div class="m-hero-content">
+                <div class="m-hero-label">New Season — SS 2025</div>
+                <div class="m-hero-title">Dressed for<br><em>every moment</em></div>
+                <div class="m-cta">Shop Women</div>
+                <div class="m-cta-o">Explore Men</div>
+              </div>
+            </div>
+            <!-- CATEGORIES -->
+            <div class="m-section">
+              <div class="m-section-head">
+                <div>
+                  <div class="m-s-label">By Category</div>
+                  <div class="m-s-title">Shop the Collection</div>
+                </div>
+                <div class="m-s-link">View All →</div>
+              </div>
+              <div class="m-cats" style="padding:0; margin-bottom:0;">
+                <div class="m-cat" style="aspect-ratio:1.2;">
+                  <img src="Gemini_Generated_Image_omcyhvomcyhvomcy.png" alt="Women" style="object-position:top;">
+                  <div class="m-cat-overlay"></div>
+                  <div class="m-cat-label">Women's</div>
+                </div>
+                <div class="m-cat" style="aspect-ratio:1.2;">
+                  <img src="Gemini_Generated_Image_440k5l440k5l440k.png" alt="Men" style="object-position:top;">
+                  <div class="m-cat-overlay"></div>
+                  <div class="m-cat-label">Men's</div>
+                </div>
+                <div class="m-cat" style="aspect-ratio:1.2;">
+                  <img src="Gemini_Generated_Image_3q6hc63q6hc63q6h.png" alt="Kids" style="object-position:top;">
+                  <div class="m-cat-overlay"></div>
+                  <div class="m-cat-label">Kids</div>
+                </div>
+              </div>
+            </div>
+            <!-- PRODUCTS SECTION -->
+            <div class="m-section" style="background:var(--warm);">
+              <div class="m-section-head">
+                <div>
+                  <div class="m-s-label">Just In</div>
+                  <div class="m-s-title">New Arrivals</div>
+                </div>
+                <div class="m-s-link">View All →</div>
+              </div>
+              <div class="m-product-grid">
+                <div class="m-product-card">
+                  <div class="m-product-img">
+                    <img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt="Dress">
+                    <span class="m-wish">♡</span>
+                  </div>
+                  <div class="m-product-info">
+                    <div class="m-product-name">Satin Midi Dress</div>
+                    <div class="m-product-price"><strong>4,800 DZD</strong></div>
+                  </div>
+                </div>
+                <div class="m-product-card">
+                  <div class="m-product-img">
+                    <img src="Gemini_Generated_Image_x66q0vx66q0vx66q.png" alt="Tee">
+                    <span class="m-wish">♡</span>
+                  </div>
+                  <div class="m-product-info">
+                    <div class="m-product-name">Washed Oversized Tee</div>
+                    <div class="m-product-price"><strong>2,200 DZD</strong></div>
+                  </div>
+                </div>
+                <div class="m-product-card">
+                  <div class="m-product-img">
+                    <img src="Gemini_Generated_Image_440k5l440k5l440k.png" alt="Suit">
+                    <span class="m-wish">♡</span>
+                  </div>
+                  <div class="m-product-info">
+                    <div class="m-product-name">Slim Suit Set</div>
+                    <div class="m-product-price"><strong>8,500 DZD</strong></div>
+                  </div>
+                </div>
+                <div class="m-product-card">
+                  <div class="m-product-img">
+                    <img src="Gemini_Generated_Image_omcyhvomcyhvomcy.png" alt="Coat">
+                    <span class="m-wish">♡</span>
+                  </div>
+                  <div class="m-product-info">
+                    <div class="m-product-name">Modest Camel Coat</div>
+                    <div class="m-product-price"><strong>6,900 DZD</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FOOTER -->
+            <div class="m-footer">
+              <div class="m-foot-logo">LAZULI</div>
+              <div class="m-foot-text">Premium clothing for every Algerian. Quality fashion for men, women &amp; kids — delivered nationwide.</div>
+              <div class="m-foot-grid">
+                <div><div class="m-foot-h">Shop</div><div class="m-foot-link">Women's</div><div class="m-foot-link">Men's</div><div class="m-foot-link">Kids</div></div>
+                <div><div class="m-foot-h">Support</div><div class="m-foot-link">Track Order</div><div class="m-foot-link">Returns</div><div class="m-foot-link">FAQ</div></div>
+                <div><div class="m-foot-h">Company</div><div class="m-foot-link">About</div><div class="m-foot-link">Careers</div></div>
+              </div>
+              <div class="m-foot-bottom">
+                <div class="m-foot-copy">© 2025 LAZULI. MADE IN ALGERIA WITH ♥</div>
+                <div class="m-pay"><span>CCP</span><span>BARIDIMOB</span><span>CASH</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-annotations">
+          <div class="annotation">
+            <div class="ann-title">Sticky Navigation</div>
+            <div class="ann-desc">Transparent on hero, transitions to frosted glass (rgba chalk + backdrop-blur:12px) on scroll. Custom cursor follows mouse with lag animation.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Marquee Ticker</div>
+            <div class="ann-desc">Infinite scroll ticker on dark background with rust-colored dots. Announces: free shipping, new arrivals, payment methods.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Full-Viewport Hero</div>
+            <div class="ann-desc">100vh hero with editorial editorial photo split, dark gradient overlay, and stacked CTAs (primary rust + ghost outline).</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Category Cards</div>
+            <div class="ann-desc">3-column grid with full-bleed photography, bottom-gradient overlay, and hover scale animation.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Product Grid</div>
+            <div class="ann-desc">4-column cards with wishlist toggle (♡/♥), color-dot carousel, quick-add hover state, and image zoom on hover.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHOP PAGE -->
+    <div style="margin-bottom:60px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:28px;">Shop Page — shop.html</div>
+      <div class="screen-row">
+        <div class="screen-frame">
+          <div class="screen-label">Shop <span>Desktop · 1440px</span></div>
+          <div class="screen-mock screen-desktop">
+            <div class="m-nav" style="background:var(--chalk); box-shadow:0 1px 0 rgba(0,0,0,.08);">
+              <div class="m-logo" style="color:var(--ink);">LAZULI</div>
+              <div class="m-nav-links">
+                <div class="m-nav-link" style="color:var(--mist);">Home</div>
+                <div class="m-nav-link a" style="color:var(--ink);">Shop</div>
+                <div class="m-nav-link" style="color:var(--mist);">Lookbook</div>
+              </div>
+              <div class="m-nav-r"><div class="m-cart-btn">Cart (0)</div></div>
+            </div>
+            <!-- Shop Header -->
+            <div class="m-shop-header">
+              <div>
+                <div style="font-family:'Space Mono',monospace; font-size:7px; letter-spacing:.25em; color:var(--mist); text-transform:uppercase; margin-bottom:4px;">All Collections</div>
+                <div class="m-shop-ht">The Shop</div>
+              </div>
+              <div style="font-family:'Cormorant Garamond',serif; font-size:11px; color:var(--mist); font-style:italic;">48 products</div>
+            </div>
+            <!-- Filters -->
+            <div class="m-filters">
+              <div class="m-filter-chip active">All</div>
+              <div class="m-filter-chip">Women's</div>
+              <div class="m-filter-chip">Men's</div>
+              <div class="m-filter-chip">Kids</div>
+              <div class="m-filter-chip">Streetwear</div>
+              <div class="m-filter-chip">Accessories</div>
+              <div style="margin-left:auto; font-size:7px; letter-spacing:.1em; text-transform:uppercase; color:var(--mist); padding:4px 10px; border:1px solid var(--stone);">Sort: Newest ▾</div>
+            </div>
+            <!-- Product Grid -->
+            <div style="background:var(--chalk); padding:20px 24px;">
+              <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt=""><span class="m-wish">♡</span></div><div class="m-product-info"><div class="m-product-name">Satin Midi Dress</div><div class="m-product-price"><strong>4,800 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_x66q0vx66q0vx66q.png" alt=""><span class="m-wish">♡</span></div><div class="m-product-info"><div class="m-product-name">Washed Oversized Tee</div><div class="m-product-price"><strong>2,200 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_440k5l440k5l440k.png" alt=""><span class="m-wish">♥</span></div><div class="m-product-info"><div class="m-product-name">Slim Suit Jacket</div><div class="m-product-price"><strong>8,500 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_omcyhvomcyhvomcy.png" alt=""><span class="m-wish">♡</span></div><div class="m-product-info"><div class="m-product-name">Camel Coat</div><div class="m-product-price"><strong>6,900 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_agy78sagy78sagy7.png" alt=""><span class="m-wish">♡</span></div><div class="m-product-info"><div class="m-product-name">Ribbed Skirt Set</div><div class="m-product-price"><strong>3,600 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_fp4pikfp4pikfp4p.png" alt=""><span class="m-wish">♡</span></div><div class="m-product-info"><div class="m-product-name">Men's Accessories</div><div class="m-product-price"><strong>1,800 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_3q6hc63q6hc63q6h.png" alt=""><span class="m-wish">♡</span></div><div class="m-product-info"><div class="m-product-name">Kids Classic Set</div><div class="m-product-price"><strong>3,200 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img"><img src="Gemini_Generated_Image_4xiapv4xiapv4xia.png" alt=""><span class="m-wish">♡</span></div><div class="m-product-info"><div class="m-product-name">Streetwear Hoodie</div><div class="m-product-price"><strong>3,900 DZD</strong></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-annotations">
+          <div class="annotation">
+            <div class="ann-title">Shop Header</div>
+            <div class="ann-desc">Dark editorial header with product count. On mobile, collapses to full-width banner.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Filter Bar</div>
+            <div class="ann-desc">Horizontal scroll filter chips with active state (dark border). Sort dropdown on the right. Filters by category, price, and new arrivals.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Product Grid</div>
+            <div class="ann-desc">4-col on desktop → 2-col on mobile. Each card includes image carousel dots, wishlist button, and quick-add on hover.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT DETAIL PAGE -->
+    <div style="margin-bottom:60px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:28px;">Product Detail — product.html</div>
+      <div class="screen-row">
+        <div class="screen-frame">
+          <div class="screen-label">Product Detail <span>Desktop · 1440px</span></div>
+          <div class="screen-mock screen-desktop">
+            <div class="m-nav" style="background:var(--chalk); box-shadow:0 1px 0 rgba(0,0,0,.08);">
+              <div class="m-logo" style="color:var(--ink);">LAZULI</div>
+              <div class="m-nav-links"><div class="m-nav-link" style="color:var(--mist);">Shop</div></div>
+              <div class="m-nav-r"><div class="m-cart-btn">Cart (1)</div></div>
+            </div>
+            <div class="m-pd">
+              <!-- Gallery -->
+              <div style="background:var(--stone); display:grid; grid-template-rows:auto auto; gap:2px;">
+                <div class="m-pd-gallery" style="height:200px;">
+                  <img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt="Dress">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; height:60px;">
+                  <div style="background:var(--stone); overflow:hidden;"><img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.6;"></div>
+                  <div style="background:var(--stone); overflow:hidden; outline:2px solid var(--ink);"><img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+                  <div style="background:var(--stone); overflow:hidden;"><img src="Gemini_Generated_Image_agy78sagy78sagy7.png" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.6;"></div>
+                </div>
+              </div>
+              <!-- Info panel -->
+              <div class="m-pd-info">
+                <div class="m-pd-cat">Women's Dresses · SS 2025</div>
+                <div class="m-pd-name">Satin Midi<br>Dress</div>
+                <div style="font-size:7px; color:var(--gold); letter-spacing:2px; margin-bottom:6px;">★★★★★ <span style="color:var(--mist); font-size:7px;">(24)</span></div>
+                <div class="m-pd-price">4,800 DZD</div>
+                <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px;">Color — Sand</div>
+                <div style="display:flex; gap:5px; margin-bottom:10px;">
+                  <div style="width:16px; height:16px; background:#c8b89a; outline:2px solid var(--ink); outline-offset:2px;"></div>
+                  <div style="width:16px; height:16px; background:#0f0e0d;"></div>
+                  <div style="width:16px; height:16px; background:#fff; border:1px solid var(--stone);"></div>
+                </div>
+                <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px;">Size</div>
+                <div class="m-size-row">
+                  <div class="m-size">XS</div>
+                  <div class="m-size">S</div>
+                  <div class="m-size sel">M</div>
+                  <div class="m-size">L</div>
+                  <div class="m-size">XL</div>
+                </div>
+                <div class="m-pd-btn">Add to Cart</div>
+                <div class="m-pd-btn-o">Add to Wishlist ♡</div>
+                <div style="margin-top:10px; border-top:1px solid var(--stone); padding-top:8px;">
+                  <div style="font-size:7px; color:var(--mist); line-height:1.6;">✓ Free shipping over 5,000 DZD<br>✓ 14-day returns<br>✓ Authentic Lazuli product</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-annotations">
+          <div class="annotation">
+            <div class="ann-title">Gallery + Thumbnails</div>
+            <div class="ann-desc">Split layout: image gallery on left with thumbnail row below. Active thumbnail has ink outline. Main image updates on thumb click.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Color Swatches</div>
+            <div class="ann-desc">Actual color swatches with outline-offset active state. Tooltip shows color name on hover.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Size Grid</div>
+            <div class="ann-desc">Square size buttons. Selected has ink border. Out-of-stock sizes are crossed out and cursor: not-allowed.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Trust Signals</div>
+            <div class="ann-desc">Shipping threshold, return policy, and authenticity badges below CTA buttons.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CART DRAWER + CHECKOUT -->
+    <div style="margin-bottom:60px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:28px;">Cart Drawer + Checkout — cart.html / checkout.html</div>
+      <div class="screen-row">
+
+        <!-- Cart drawer mock -->
+        <div class="screen-frame">
+          <div class="screen-label">Cart Drawer <span>Side panel · 480px</span></div>
+          <div class="screen-mock" style="width:300px; display:flex; flex-direction:column;">
+            <div class="m-drawer-head">
+              <div class="m-drawer-title">Your Cart</div>
+              <div class="m-drawer-close">✕</div>
+            </div>
+            <div style="flex:1;">
+              <div class="m-cart-item">
+                <div class="m-cart-img"><img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt=""></div>
+                <div class="m-cart-info">
+                  <div class="m-cart-name">Satin Midi Dress</div>
+                  <div class="m-cart-meta">Sand · Size M</div>
+                  <div class="m-cart-price">4,800 DZD</div>
+                  <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                    <div style="width:20px; height:20px; border:1px solid var(--stone); display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--mist);">−</div>
+                    <div style="font-family:'Space Mono',monospace; font-size:9px; color:var(--ink);">1</div>
+                    <div style="width:20px; height:20px; border:1px solid var(--stone); display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--mist);">+</div>
+                    <div style="margin-left:auto; font-size:8px; color:var(--mist);">Remove</div>
+                  </div>
+                </div>
+              </div>
+              <div class="m-cart-item">
+                <div class="m-cart-img"><img src="Gemini_Generated_Image_fp4pikfp4pikfp4p.png" alt=""></div>
+                <div class="m-cart-info">
+                  <div class="m-cart-name">Leather Belt</div>
+                  <div class="m-cart-meta">Cognac · One Size</div>
+                  <div class="m-cart-price">1,800 DZD</div>
+                </div>
+              </div>
+            </div>
+            <div class="m-drawer-foot">
+              <div class="m-drawer-total">
+                <div class="m-drawer-total-l">Subtotal</div>
+                <div class="m-drawer-total-v">6,600 DZD</div>
+              </div>
+              <div style="font-size:7px; color:var(--mist); margin-bottom:10px;">Shipping calculated at checkout.</div>
+              <div class="m-checkout-btn">Proceed to Checkout →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkout page mock -->
+        <div class="screen-frame">
+          <div class="screen-label">Checkout <span>checkout.html</span></div>
+          <div class="screen-mock" style="width:340px;">
+            <div class="m-nav" style="background:var(--chalk); box-shadow:0 1px 0 rgba(0,0,0,.08);">
+              <div class="m-logo" style="color:var(--ink);">LAZULI</div>
+              <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--mist); letter-spacing:.15em;">SECURE CHECKOUT</div>
+            </div>
+            <div class="m-checkout">
+              <div class="m-chk-left">
+                <div class="m-chk-step">Step 1 of 2 — Delivery</div>
+                <div class="m-input-group">
+                  <div class="m-input-label">Full Name</div>
+                  <div class="m-input">Fatima Benali</div>
+                </div>
+                <div class="m-input-row">
+                  <div class="m-input-group">
+                    <div class="m-input-label">Wilaya</div>
+                    <div class="m-input">Algiers ▾</div>
+                  </div>
+                  <div class="m-input-group">
+                    <div class="m-input-label">Phone</div>
+                    <div class="m-input">0550 ...</div>
+                  </div>
+                </div>
+                <div class="m-input-group">
+                  <div class="m-input-label">Address</div>
+                  <div class="m-input" style="height:36px;"></div>
+                </div>
+                <div style="margin-top:12px;">
+                  <div style="font-family:'Space Mono',monospace; font-size:7px; letter-spacing:.2em; color:rgba(0,0,0,.4); text-transform:uppercase; margin-bottom:8px;">Payment Method</div>
+                  <div style="display:flex; flex-direction:column; gap:6px;">
+                    <div style="border:1px solid var(--ink); padding:7px 10px; font-size:7px; color:var(--ink); display:flex; align-items:center; gap:8px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ink);"></div> Cash on Delivery</div>
+                    <div style="border:1px solid var(--stone); padding:7px 10px; font-size:7px; color:var(--mist); display:flex; align-items:center; gap:8px;"><div style="width:10px;height:10px;border-radius:50%;border:1.5px solid var(--stone);"></div> CCP Transfer</div>
+                    <div style="border:1px solid var(--stone); padding:7px 10px; font-size:7px; color:var(--mist); display:flex; align-items:center; gap:8px;"><div style="width:10px;height:10px;border-radius:50%;border:1.5px solid var(--stone);"></div> Baridimob</div>
+                  </div>
+                </div>
+                <div style="margin-top:12px; background:var(--rust); color:#fff; font-size:8px; letter-spacing:.12em; text-transform:uppercase; padding:10px; text-align:center;">Place Order →</div>
+              </div>
+              <div class="m-chk-right">
+                <div style="font-family:'Space Mono',monospace; font-size:7px; letter-spacing:.2em; color:var(--mist); text-transform:uppercase; margin-bottom:10px;">Order Summary (2)</div>
+                <div class="m-order-item">
+                  <div class="m-oi-img"><img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+                  <div><div class="m-oi-name">Satin Midi Dress</div><div class="m-oi-meta">Sand · M · ×1</div></div>
+                  <div class="m-oi-price">4,800 DZD</div>
+                </div>
+                <div class="m-order-item">
+                  <div class="m-oi-img"><img src="Gemini_Generated_Image_fp4pikfp4pikfp4p.png" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+                  <div><div class="m-oi-name">Leather Belt</div><div class="m-oi-meta">Cognac · ×1</div></div>
+                  <div class="m-oi-price">1,800 DZD</div>
+                </div>
+                <div class="m-order-total">
+                  <div class="m-ot-row"><span>Subtotal</span><span>6,600 DZD</span></div>
+                  <div class="m-ot-row"><span>Shipping</span><span>400 DZD</span></div>
+                  <div class="m-ot-row final"><span>Total</span><span>7,000 DZD</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-annotations">
+          <div class="annotation">
+            <div class="ann-title">Cart Drawer</div>
+            <div class="ann-desc">Right-side slide panel (480px wide). Dark overlay behind. Qty controls, item removal, and live subtotal. Checkout CTA stays fixed at bottom.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Checkout Layout</div>
+            <div class="ann-desc">2-column: form on left, order summary (--warm background) on right. Adapted for Algeria-specific Wilaya dropdown, phone format, and payment: Cash, CCP, Baridimob.</div>
+          </div>
+          <div class="annotation">
+            <div class="ann-title">Payment Methods</div>
+            <div class="ann-desc">Radio-style cards for COD (default), CCP Transfer, and Baridimob — the three main Algeria payment channels.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOOKBOOK, ABOUT, CONTACT -->
+    <div style="margin-bottom:60px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:28px;">Supporting Pages — lookbook / about / contact / wishlist</div>
+      <div class="screen-row" style="align-items:flex-start;">
+
+        <!-- Lookbook -->
+        <div class="screen-frame">
+          <div class="screen-label">Lookbook <span>lookbook.html</span></div>
+          <div class="screen-mock" style="width:220px;">
+            <div class="m-nav" style="height:40px;"><div class="m-logo">LAZULI</div></div>
+            <div class="m-lookbook">
+              <div class="m-lb-hero">
+                <img src="Gemini_Generated_Image_ebfh0webfh0webfh.png" alt="">
+                <div class="m-lb-overlay">
+                  <div>
+                    <div style="font-family:'Space Mono',monospace; font-size:6px; letter-spacing:.25em; color:rgba(255,255,255,.5); margin-bottom:4px;">Spring / Summer 2025</div>
+                    <div class="m-lb-title">The Edit</div>
+                  </div>
+                </div>
+              </div>
+              <div class="m-lb-grid">
+                <div class="m-lb-item"><img src="Gemini_Generated_Image_omcyhvomcyhvomcy.png" alt=""><div class="m-lb-item-overlay"></div></div>
+                <div class="m-lb-item"><img src="Gemini_Generated_Image_440k5l440k5l440k.png" alt=""><div class="m-lb-item-overlay"></div></div>
+                <div class="m-lb-item"><img src="Gemini_Generated_Image_agy78sagy78sagy7.png" alt=""><div class="m-lb-item-overlay"></div></div>
+                <div class="m-lb-item"><img src="Gemini_Generated_Image_4xiapv4xiapv4xia.png" alt=""><div class="m-lb-item-overlay"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="screen-frame">
+          <div class="screen-label">About <span>about.html</span></div>
+          <div class="screen-mock" style="width:220px;">
+            <div class="m-nav" style="height:40px;"><div class="m-logo">LAZULI</div></div>
+            <div class="m-about">
+              <div class="m-about-hero">
+                <img src="Gemini_Generated_Image_8yapny8yapny8yap.png" alt="" style="opacity:.7;">
+                <div class="m-about-hero-overlay"></div>
+                <div style="position:relative; z-index:1; padding:12px;">
+                  <div style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#fff; font-weight:400;">Our Story</div>
+                </div>
+              </div>
+              <div class="m-about-text">
+                <div class="m-about-ht">Lazuli, Est. 2024</div>
+                <div class="m-about-p">Born in Algeria, built for Algerians. We believe premium fashion should be accessible to every family, every style, every occasion — without compromise.</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
+                  <div style="border:1px solid var(--stone); padding:10px; text-align:center;">
+                    <div style="font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--ink);">4,800+</div>
+                    <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase;">Orders</div>
+                  </div>
+                  <div style="border:1px solid var(--stone); padding:10px; text-align:center;">
+                    <div style="font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--ink);">48</div>
+                    <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase;">Wilayas</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wishlist -->
+        <div class="screen-frame">
+          <div class="screen-label">Wishlist <span>wishlist.html</span></div>
+          <div class="screen-mock" style="width:220px;">
+            <div class="m-nav" style="background:var(--chalk); box-shadow:0 1px 0 rgba(0,0,0,.08); height:40px;">
+              <div class="m-logo" style="color:var(--ink);">LAZULI</div>
+              <div style="font-size:10px; color:var(--rust);">♥ 3</div>
+            </div>
+            <div class="m-wishlist">
+              <div style="font-family:'Space Mono',monospace; font-size:7px; letter-spacing:.25em; color:var(--mist); text-transform:uppercase; margin-bottom:4px;">Saved Items</div>
+              <div style="font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--ink); margin-bottom:14px;">Your Wishlist</div>
+              <div class="m-wish-grid">
+                <div class="m-product-card"><div class="m-product-img" style="aspect-ratio:3/4;"><img src="Gemini_Generated_Image_9ameg29ameg29ame.png" alt=""><span class="m-wish" style="color:var(--rust);">♥</span></div><div class="m-product-info"><div class="m-product-name">Satin Midi Dress</div><div class="m-product-price"><strong>4,800 DZD</strong></div></div></div>
+                <div class="m-product-card"><div class="m-product-img" style="aspect-ratio:3/4;"><img src="Gemini_Generated_Image_omcyhvomcyhvomcy.png" alt=""><span class="m-wish" style="color:var(--rust);">♥</span></div><div class="m-product-info"><div class="m-product-name">Camel Coat</div><div class="m-product-price"><strong>6,900 DZD</strong></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="screen-frame">
+          <div class="screen-label">Contact <span>contact.html</span></div>
+          <div class="screen-mock" style="width:220px;">
+            <div class="m-nav" style="background:var(--chalk); box-shadow:0 1px 0 rgba(0,0,0,.08); height:40px;">
+              <div class="m-logo" style="color:var(--ink);">LAZULI</div>
+            </div>
+            <div style="background:var(--ink); padding:16px;">
+              <div style="font-family:'Space Mono',monospace; font-size:6px; letter-spacing:.25em; color:var(--mist); text-transform:uppercase; margin-bottom:4px;">Get in Touch</div>
+              <div style="font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--chalk);">Contact Us</div>
+            </div>
+            <div style="background:var(--chalk); padding:14px;">
+              <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px;">Name</div>
+              <div style="border:1px solid var(--stone); padding:6px 8px; font-size:8px; color:var(--mist); margin-bottom:8px; background:#fff;">Your name</div>
+              <div style="font-size:7px; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px;">Message</div>
+              <div style="border:1px solid var(--stone); padding:6px 8px; font-size:8px; color:var(--mist); height:40px; background:#fff; margin-bottom:8px;"></div>
+              <div style="background:var(--rust); color:#fff; font-size:7px; letter-spacing:.12em; text-transform:uppercase; padding:8px; text-align:center;">Send Message</div>
+              <div style="margin-top:12px; border-top:1px solid var(--stone); padding-top:10px;">
+                <div style="font-size:7px; color:var(--mist); line-height:1.8;">📞 +213 XX XXX XXXX<br>📧 support@lazuli.dz<br>📍 Algiers, Algeria</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ USER FLOW ============ -->
+  <div id="flow" style="position:relative; z-index:1; margin-bottom:80px;">
+    <div class="section-title">04 — User Flow</div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:16px;">Primary Purchase Flow</div>
+      <div class="flow-row">
+        <div class="flow-node active">Homepage</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">Shop / Category</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">Product Detail</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">Cart Drawer</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">Checkout</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">Confirmation</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:16px;">Discovery Flow</div>
+      <div class="flow-row">
+        <div class="flow-node">Homepage Hero</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Lookbook</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Tagged Products</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Product Detail</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Wishlist</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Cart</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:16px;">Support Flow</div>
+      <div class="flow-row">
+        <div class="flow-node">Any Page</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Footer Links</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Contact</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Confirmation Email</div>
+      </div>
+    </div>
+
+    <!-- Page Inventory -->
+    <div style="margin-top:48px;">
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:.2em; color:rgba(255,255,255,.3); text-transform:uppercase; margin-bottom:16px;">Page Inventory</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:12px;">
+        <div style="background:#1f1c19; border:1px solid var(--rust); padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--rust); letter-spacing:.15em; margin-bottom:6px;">index.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Homepage — Hero, Categories, New Arrivals, Newsletter</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">shop.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Product listing with filters, sort, and 4-col grid</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">product.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Product detail with gallery, variants, size, reviews</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">cart.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Full cart page + slide-out drawer (global)</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">checkout.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">2-step checkout: delivery + Algerian payment methods</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">lookbook.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Editorial lookbook with shoppable images</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">wishlist.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Saved products with quick-add to cart</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">about.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Brand story, team, stats, and values</div>
+        </div>
+        <div style="background:#1f1c19; border:1px solid #2a2622; padding:14px;">
+          <div style="font-family:'Space Mono',monospace; font-size:7px; color:var(--sand); letter-spacing:.15em; margin-bottom:6px;">contact.html</div>
+          <div style="font-size:11px; color:rgba(255,255,255,.6);">Contact form + support info + location</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer of design doc -->
+  <div style="position:relative; z-index:1; border-top:1px solid #2a2622; padding-top:28px; display:flex; justify-content:space-between; align-items:center;">
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:rgba(255,255,255,.8); font-weight:700; letter-spacing:.18em;">LAZULI</div>
+      <div style="font-family:'Space Mono',monospace; font-size:8px; color:rgba(255,255,255,.2); letter-spacing:.15em; margin-top:4px;">DESIGN SYSTEM v1.0 — ALGERIA</div>
+    </div>
+    <div style="font-family:'Space Mono',monospace; font-size:8px; color:rgba(255,255,255,.2); letter-spacing:.1em; text-align:right;">
+      9 HTML Pages · 3 Font Families<br>
+      Cormorant Garamond + Outfit + Space Mono<br>
+      DZD Currency · Wilayas · COD / CCP / Baridimob
+    </div>
+  </div>
+
+</div><!-- /canvas -->
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "shop": "Shop",
+    "men": "Men",
+    "women": "Women",
+    "lookbook": "Lookbook",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "cart": "Cart",
+  "wishlist": "Wishlist",
+  "search": "Search",
+  "searchPlaceholder": "Search for products...",
+  "shopNow": "Shop Now",
+  "viewLookbook": "View Lookbook",
+  "addToCart": "Add to Cart",
+  "continueShopping": "Continue Shopping",
+  "clearCart": "Clear Cart",
+  "viewAll": "View All",
+  "newsletter": {
+    "title": "Stay in the Loop",
+    "subtitle": "Subscribe to get exclusive offers, new arrivals, and style tips.",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe"
+  },
+  "footer": {
+    "description": "Premium clothing for every Algerian. Quality fashion for men, women & kids — delivered nationwide.",
+    "shop": "Shop",
+    "support": "Support",
+    "company": "Company",
+    "trackOrder": "Track Order",
+    "returns": "Returns",
+    "shipping": "Shipping",
+    "sizeGuide": "Size Guide",
+    "faq": "FAQ",
+    "careers": "Careers",
+    "privacyPolicy": "Privacy Policy",
+    "terms": "Terms",
+    "copyright": "© 2025 LAZULI. MADE IN ALGERIA WITH ♥"
+  },
+  "heroTitle": "Dress Your",
+  "heroTitleAccent": "Story",
+  "heroTitleEnd": "Every Day",
+  "heroSubtitle": "Premium clothing for every Algerian — from streetwear to modest fashion, from kids to formal wear.",
+  "newSeason": "NEW SEASON 2025",
+  "freeShipping": "FREE SHIPPING OVER 5000 DZD",
+  "newArrivals": "NEW ARRIVALS EVERY WEEK",
+  "qualityGuaranteed": "QUALITY GUARANTEED",
+  "returnsPolicy": "RETURNS WITHIN 14 DAYS"
+}

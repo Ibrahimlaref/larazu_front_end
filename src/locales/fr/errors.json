@@ -1,0 +1,3 @@
+{
+  "required": "Ce champ est requis", "invalidEmail": "Email invalide", "invalidPhone": "Numéro invalide", "orderFailed": "Échec de la commande.", "genericError": "Une erreur est survenue.", "notFound": "Page introuvable", "notFoundDesc": "La page que vous cherchez n'existe pas."
+}

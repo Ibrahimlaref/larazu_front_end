@@ -1,0 +1,3 @@
+{
+  "required": "هذا الحقل مطلوب", "invalidEmail": "بريد إلكتروني غير صالح", "invalidPhone": "رقم هاتف غير صالح", "orderFailed": "فشل الطلب.", "genericError": "حدث خطأ.", "notFound": "الصفحة غير موجودة", "notFoundDesc": "الصفحة التي تبحث عنها غير موجودة."
+}

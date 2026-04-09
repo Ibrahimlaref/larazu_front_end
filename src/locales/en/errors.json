@@ -1,0 +1,9 @@
+{
+  "required": "This field is required",
+  "invalidEmail": "Please enter a valid email",
+  "invalidPhone": "Please enter a valid phone number",
+  "orderFailed": "Failed to place order. Please try again.",
+  "genericError": "Something went wrong. Please try again.",
+  "notFound": "Page not found",
+  "notFoundDesc": "The page you're looking for doesn't exist."
+}

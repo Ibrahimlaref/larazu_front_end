@@ -13,26 +13,6 @@ export default function EditProduct() {
 
   useEffect(() => {
     if (!id) return;
-    // We assume the admin /api/admin/products/:id endpoint could be used, or just fetching list.
-    // The previous implementation fetched the list, but it's risky if pagination hides it.
-    // Let's use the list for now but with a very large page size or ID filter if supported.
-    // Wait, the API has AdminProductDetailView at GET products/:id ? No, ProductListCreateView is GET/POST, but DetailView only has PUT/DELETE.
-    // Let's rely on the public endpoint or admin get list bypass. Actually we can GET /api/products/ (storefront) but it excludes drafts!
-    // The safest is to rely on what was here previously: /api/admin/products/
-    adminApi.get(`/api/admin/products/`, { params: { search: "", status: "all", pageSize: 1, page: 1 } })
-      .then(res => {
-         // This is a hack because we didn't add GET detail admin endpoint explicitly.
-         // Wait, we *DID NOT* add a GET AdminProductDetailView method in backend.
-         // Let's query by search=id or we just fetch the generic paginated. 
-      })
-      .catch(() => {});
-      
-    // Actually, let's just use the direct fetch like the old EditProduct.tsx did.
-    adminApi.get(`/api/admin/products/`) // Old one did this implicitly!
-      // I will just use the standard Products filter
-      .then(() => {}) // We will replace this with a direct lookup trick
-       
-    // To ensure we get the item, it's better to fetch admin products with a large limit
     adminApi.get(`/api/admin/products/`, { params: { pageSize: 500 } })
       .then((res) => {
         const list = Array.isArray(res.data) ? res.data : (res.data?.results || []);

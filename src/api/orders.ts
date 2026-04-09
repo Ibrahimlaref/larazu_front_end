@@ -31,10 +31,14 @@ export async function createOrder(data: {
     total: string | number;
     status: string;
     address: Address;
-    payment_method: string;
+    payment_method?: string;
+    paymentMethod?: string;
     shipping_method: string;
-    created_at: string;
-    estimated_delivery: string;
+    shippingMethod?: string;
+    created_at?: string;
+    createdAt?: string;
+    estimated_delivery?: string;
+    estimatedDelivery?: string;
   }>("/api/orders/", body);
   return {
     id: String(res.id),
@@ -45,8 +49,8 @@ export async function createOrder(data: {
     total: Number(res.total),
     status: res.status as Order["status"],
     address: res.address,
-    paymentMethod: (res.payment_method || res.paymentMethod) as PaymentMethod,
-    createdAt: res.created_at ?? new Date().toISOString(),
+    paymentMethod: (res.payment_method ?? res.paymentMethod) as PaymentMethod,
+    createdAt: res.created_at ?? res.createdAt ?? new Date().toISOString(),
     estimatedDelivery: res.estimated_delivery ?? res.estimatedDelivery ?? new Date().toISOString(),
   };
 }
@@ -62,10 +66,14 @@ export async function fetchOrderById(id: string): Promise<Order | null> {
       total: string | number;
       status: string;
       address: Address;
-      payment_method: string;
+      payment_method?: string;
+      paymentMethod?: string;
       shipping_method: string;
-      created_at: string;
-      estimated_delivery: string;
+      shippingMethod?: string;
+      created_at?: string;
+      createdAt?: string;
+      estimated_delivery?: string;
+      estimatedDelivery?: string;
     }>(`/api/orders/${id}/`);
     return {
       id: String(data.id),
@@ -76,8 +84,8 @@ export async function fetchOrderById(id: string): Promise<Order | null> {
       total: Number(data.total),
       status: data.status as Order["status"],
       address: data.address,
-      paymentMethod: (data.payment_method || data.paymentMethod) as PaymentMethod,
-      createdAt: data.created_at ?? new Date().toISOString(),
+      paymentMethod: (data.payment_method ?? data.paymentMethod) as PaymentMethod,
+      createdAt: data.created_at ?? data.createdAt ?? new Date().toISOString(),
       estimatedDelivery: data.estimated_delivery ?? data.estimatedDelivery ?? new Date().toISOString(),
     };
   } catch {

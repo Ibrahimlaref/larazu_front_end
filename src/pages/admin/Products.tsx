@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { 
   fetchAdminProducts, 
@@ -22,7 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { 
-  Search, Plus, MoreVertical, Edit2, Trash2, Tag,
+  Search, Plus, MoreVertical, Edit2, Trash2,
   Clock, DollarSign, Package, Activity, AlertTriangle, Eye, EyeOff
 } from "lucide-react";
 
@@ -547,7 +547,7 @@ export default function AdminProducts() {
             {historySheet.history.length === 0 ? (
               <p className="pl-4 text-sm text-mist">No recent history logs found.</p>
             ) : (
-              historySheet.history.map((h, i) => (
+              historySheet.history.map((h) => (
                 <div key={h.id} className="relative pl-6">
                   <div className="absolute w-3 h-3 bg-white border-2 border-ink rounded-full -left-[7px] top-1" />
                   <div className="flex items-center gap-2 mb-1">

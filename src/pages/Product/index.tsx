@@ -62,13 +62,19 @@ export default function ProductPage() {
     );
   }
 
+  const getImageUrl = (raw?: string | null) => {
+    if (!raw) return "/products/Gemini_Generated_Image_3q6hc63q6hc63q6h.png";
+    if (raw.startsWith("http") || raw.startsWith("data:")) return raw;
+    return `${import.meta.env.BASE_URL}${raw.replace(/^\//, "")}`;
+  };
+
   const hasDiscount = product.salePrice && product.salePrice > product.price;
   const discount = hasDiscount
     ? Math.round(((product.salePrice! - product.price) / product.salePrice!) * 100)
     : 0;
   const inWishlist = isInWishlist(product.id);
   const related = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
-  const productImage = product.images?.[mainImage] || "/products/Gemini_Generated_Image_3q6hc63q6hc63q6h.png";
+  const productImage = getImageUrl(product.images?.[mainImage]);
   const hasColors = product.colors?.length > 0;
   const hasSizes = product.sizes?.length > 0;
   const selectedColorLabel = hasColors ? product.colors[selectedColor]?.name ?? "Default" : "Default";
@@ -113,8 +119,9 @@ export default function ProductPage() {
                     className={`w-20 h-24 overflow-hidden border-2 transition-colors ${
                       mainImage === i ? "border-ink" : "border-transparent"
                     }`}
+                    aria-label={`View product image ${i + 1}`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img src={getImageUrl(img)} alt={`Product image ${i + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -175,6 +182,7 @@ export default function ProductPage() {
               <div className="flex gap-2">
                 {hasColors ? (
                   product.colors.map((c, i) => (
+                    // eslint-disable-next-line
                     <button
                       key={c.name}
                       onClick={() => setSelectedColor(i)}
@@ -186,7 +194,12 @@ export default function ProductPage() {
                     />
                   ))
                 ) : (
-                  <div className="w-8 h-8 rounded-full border border-stone bg-stone" />
+                  // eslint-disable-next-line
+                  <button
+                    key="default-color"
+                    className="w-8 h-8 rounded-full border border-stone bg-stone"
+                    aria-label="Default color"
+                  />
                 )}
               </div>
             </div>

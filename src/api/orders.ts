@@ -50,6 +50,7 @@ export async function createOrder(data: {
     status: res.status as Order["status"],
     address: res.address,
     paymentMethod: (res.payment_method ?? res.paymentMethod) as PaymentMethod,
+    shippingMethod: (res.shipping_method ?? res.shippingMethod) as ShippingMethod,
     createdAt: res.created_at ?? res.createdAt ?? new Date().toISOString(),
     estimatedDelivery: res.estimated_delivery ?? res.estimatedDelivery ?? new Date().toISOString(),
   };
@@ -66,13 +67,13 @@ export async function fetchOrderById(id: string): Promise<Order | null> {
       total: string | number;
       status: string;
       address: Address;
-      payment_method?: string;
+      payment_method: string;
       paymentMethod?: string;
       shipping_method: string;
       shippingMethod?: string;
-      created_at?: string;
+      created_at: string;
       createdAt?: string;
-      estimated_delivery?: string;
+      estimated_delivery: string;
       estimatedDelivery?: string;
     }>(`/api/orders/${id}/`);
     return {
@@ -85,15 +86,11 @@ export async function fetchOrderById(id: string): Promise<Order | null> {
       status: data.status as Order["status"],
       address: data.address,
       paymentMethod: (data.payment_method ?? data.paymentMethod) as PaymentMethod,
+      shippingMethod: (data.shipping_method ?? data.shippingMethod) as ShippingMethod,
       createdAt: data.created_at ?? data.createdAt ?? new Date().toISOString(),
       estimatedDelivery: data.estimated_delivery ?? data.estimatedDelivery ?? new Date().toISOString(),
     };
   } catch {
     return null;
   }
-}
-
-export async function trackOrder(id: string): Promise<{ status: string }> {
-  const order = await fetchOrderById(id);
-  return { status: order?.status ?? "unknown" };
 }

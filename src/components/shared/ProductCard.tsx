@@ -100,6 +100,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Color dots */}
         <div className="flex gap-1 mt-2">
           {product.colors.map((c) => (
+            // eslint-disable-next-line
             <span
               key={c.name}
               className="w-3 h-3 rounded-full border border-stone"

@@ -8,6 +8,7 @@ export interface Order {
   status: OrderStatus;
   address: Address;
   paymentMethod: PaymentMethod;
+  shippingMethod: ShippingMethod;
   createdAt: string;
   estimatedDelivery: string;
 }
